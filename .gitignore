@@ -6,3 +6,4 @@ publish
 .bundle
 *.gem
 Gemfile.lock
+.idea/

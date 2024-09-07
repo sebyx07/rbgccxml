@@ -1,9 +1,9 @@
-module RbGCCXML
+# frozen_string_literal: true
 
+module RbGCCXML
   # Represents an <Enumeration> node.
   # Has many <EnumValue> nodes.
   class Enumeration < Node
-
     # Get the list of EnumValues for this enumeration
     def values
       QueryResult.new children
@@ -21,9 +21,7 @@ module RbGCCXML
     def anonymous?
       # The given CastXML name of an anon Enum is _[number]. We don't care what
       # that number is, only that the name matches this format
-      self.name =~ /_\d+/ || self.name == ""
+      self.name =~ /_\d+/ || self.name == ''
     end
-
   end
-
 end

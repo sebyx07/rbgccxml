@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 module RbGCCXML
   # All queries return either an instance of this class, or in the case of
   # a single result, the node found. Use this class to further define query
   # parameters for multiple return sets.
   class QueryResult < Array
-
     # To facilitate the management of what could be many nodes found by a single query,
     # we forward off any unknown methods to each node in the results query.
     # We assume that if one node accepts the method, then all of them will.
@@ -83,7 +84,7 @@ module RbGCCXML
       arguments = options.delete(:arguments)
       access = options.delete(:access)
 
-      raise ":arguments must be an array" if arguments && !arguments.is_a?(Array)
+      raise ':arguments must be an array' if arguments && !arguments.is_a?(Array)
       raise "Unknown keys #{options.keys.join(", ")}. " +
         "Expected are: #{EXPECTED_OPTIONS.join(",")}" unless options.empty?
 
@@ -125,7 +126,7 @@ module RbGCCXML
         # Access type
         if access
           found[:access] ||= []
-          found[:access] << node if node["access"] == access.to_s
+          found[:access] << node if node['access'] == access.to_s
         end
       end
 
@@ -160,29 +161,26 @@ module RbGCCXML
     end
 
     private
-
-    # Finders can take strings or regexes, so this wraps up the logic that chooses
-    # between straight equality matching and matching
-    def matches?(value, against)
-      case against
-      when Regexp
-        value =~ against
-      else
-        value == against
+      # Finders can take strings or regexes, so this wraps up the logic that chooses
+      # between straight equality matching and matching
+      def matches?(value, against)
+        case against
+        when Regexp
+          value =~ against
+        else
+          value == against
+        end
       end
-    end
 
-    def type_matches?(node, against)
-      against_full =
-        against.is_a?(Regexp) ?
-          against :
-          /#{against.to_s.gsub("*", "\\*").gsub(/^::/, "").gsub("[", "\\[").gsub("]", "\\]")}$/
+      def type_matches?(node, against)
+        against_full =
+          against.is_a?(Regexp) ?
+            against :
+            /#{against.to_s.gsub("*", "\\*").gsub(/^::/, "").gsub("[", "\\[").gsub("]", "\\]")}$/
 
-      matches?(node.name, against) ||
-        matches?(node.to_cpp, against_full) ||
-        matches?(node.to_cpp(false), against_full)
-    end
-
-
+        matches?(node.name, against) ||
+          matches?(node.to_cpp, against_full) ||
+          matches?(node.to_cpp(false), against_full)
+      end
   end
 end

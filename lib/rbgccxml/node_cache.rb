@@ -1,5 +1,6 @@
-module RbGCCXML
+# frozen_string_literal: true
 
+module RbGCCXML
   # Manager of the tree of Nodes we build from CastXML.
   #
   # This is a static class that keeps around references to the
@@ -7,7 +8,6 @@ module RbGCCXML
   # designed for quick and easy searching of Nodes
   class NodeCache
     class << self
-
       # Hash of id => node for all nodes
       attr_reader :index_list
 
@@ -22,7 +22,7 @@ module RbGCCXML
 
         @index_list[node.id] = node
 
-        class_name = node.class.name.split("::")[-1]
+        class_name = node.class.name.split('::')[-1]
         @types_list[class_name] ||= []
         @types_list[class_name] << node
       end
@@ -36,7 +36,7 @@ module RbGCCXML
       def root
         # This is simply a way to hide GCC_XML specifics,
         # the :: Namespace node is always id _1
-        @index_list["_1"]
+        @index_list['_1']
       end
 
       # Given an id, find the node
@@ -51,7 +51,7 @@ module RbGCCXML
 
       # Given an array of ids return an array of nodes that match
       def find_by_ids(ids)
-        QueryResult.new(ids.map {|id| @index_list[id] })
+        QueryResult.new(ids.map { |id| @index_list[id] })
       end
 
       # Look through the DOM under +node+ for +type+ nodes.
@@ -60,7 +60,7 @@ module RbGCCXML
       # Returns a QueryResult with the findings.
       def find_children_of_type(node, type, matcher = nil)
         results = QueryResult.new(self.select_nodes_of_type(node.children, type))
-        results = results.find(:name => matcher) if matcher
+        results = results.find(name: matcher) if matcher
         results
       end
 
@@ -70,24 +70,19 @@ module RbGCCXML
       # is no guarentee the nodes will come in the right order
       def process_tree
         @index_list.each do |id, node|
-
           # If this node has a context, link to that context as a parent
           # and then put ourselves as that parent's child
-          if node["context"]
-            node.parent = @index_list[node["context"]]
+          if node['context']
+            node.parent = @index_list[node['context']]
             node.parent.children << node
           end
-
         end
       end
 
       protected
-
-      def select_nodes_of_type(nodes, type)
-        nodes.select {|node| node.class.to_s == "RbGCCXML::#{type}" }
-      end
-
+        def select_nodes_of_type(nodes, type)
+          nodes.select { |node| node.class.to_s == "RbGCCXML::#{type}" }
+        end
     end
   end
-
 end

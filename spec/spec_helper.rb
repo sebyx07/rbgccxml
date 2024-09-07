@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rubygems'
 require 'rspec'
 require 'rbgccxml'
@@ -12,6 +14,8 @@ end
 RSpec.configure do |config|
   config.include(FileDirectoryHelpers)
   config.expect_with(:rspec) { |c| c.syntax = :should }
+
+  config.order = 'random'
 end
 
 # Don't complain about blank `raise_error` usage right now

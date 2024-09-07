@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RbGCCXML
   # Represents the <NamespaceAlias> node, which is a rename of an existing
   # namespace to a different name.

@@ -1,11 +1,11 @@
+# frozen_string_literal: true
+
 require 'nokogiri'
 
 module RbGCCXML
-
   # This class manages the parsing of the C++ code.
   # Please use RbGCCXML.parse and not this class directly
   class Parser
-
     def initialize(config = {})
       if config[:pregenerated]
         @xml_file = config.delete(:pregenerated)
@@ -47,7 +47,7 @@ module RbGCCXML
     def parse
       if @gccxml
         require 'tempfile'
-        @results_file = Tempfile.new("rbgccxml")
+        @results_file = Tempfile.new('rbgccxml')
         parse_file = nil
 
         if @files.length == 1
@@ -75,40 +75,39 @@ module RbGCCXML
     end
 
     private
+      def build_header_for(files)
+        header = Tempfile.new('header_wrapper')
+        header.open
 
-    def build_header_for(files)
-      header = Tempfile.new("header_wrapper")
-      header.open
+        @files.each do |file|
+          header.write "#include \"#{file}\"\n"
+        end
 
-      @files.each do |file|
-        header.write "#include \"#{file}\"\n"
+        header.close
+
+        header.path
       end
 
-      header.close
+      def validate_glob(files)
+        found = []
 
-      header.path
-    end
+        if files.is_a?(Array)
+          files.each { |f| found << Dir[f] }
+        elsif ::File.directory?(files)
+          found = Dir[files + '/*']
+        else
+          found = Dir[files]
+        end
 
-    def validate_glob(files)
-      found = []
+        found.flatten!
 
-      if files.is_a?(Array)
-        files.each {|f| found << Dir[f] }
-      elsif ::File.directory?(files)
-        found = Dir[files + "/*"]
-      else
-        found = Dir[files]
+        if found.empty?
+          raise SourceNotFoundError.new(
+            "Cannot find files matching #{files.inspect}. " +
+            'You might need to specify a full path.')
+        end
+
+        @files = found.select { |f| !::File.directory?(f) }
       end
-
-      found.flatten!
-
-      if found.empty?
-        raise SourceNotFoundError.new(
-          "Cannot find files matching #{files.inspect}. " +
-          "You might need to specify a full path.")
-      end
-
-      @files = found.select {|f| !::File.directory?(f) }
-    end
   end
 end

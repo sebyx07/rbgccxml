@@ -1,6 +1,7 @@
-class GCCXML
+# frozen_string_literal: true
 
-  def initialize()
+class GCCXML
+  def initialize
     @includes = []
     @flags = []
 
@@ -31,9 +32,9 @@ class GCCXML
   # Run gccxml on the header file(s), sending the output to the passed in
   # file.
   def parse(header_file, to_file)
-    includes = @includes.flatten.uniq.map {|i| "-I#{i.chomp}"}.join(" ").chomp
-    flags = @flags.flatten.join(" ").chomp
-    flags += " -Wno-unused-command-line-argument --castxml-cc-gnu #{find_clang} --castxml-gccxml"
+    includes = @includes.flatten.uniq.map { |i| "-I#{i.chomp}" }.join(' ').chomp
+    flags = @flags.flatten.join(' ').chomp
+    flags += " -Wno-unused-command-line-argument --castxml-cc-gnu gcc #{find_clang} --castxml-gccxml"
 
     exe = find_exe.strip.chomp
     cmd = "#{exe} #{includes} #{flags} -o #{to_file} #{header_file}"
@@ -41,38 +42,32 @@ class GCCXML
   end
 
   private
+    def find_exe
+      ext = windows? ? '.exe' : ''
+      binary = @castxml_path || "castxml#{ext}"
 
-  def find_exe
-    ext = windows? ? ".exe" : ""
-    binary = @castxml_path || "castxml#{ext}"
+      if `#{binary} --version 2>&1`.include?('CastXML')
+        binary
+      else
+        path_msg =
+          if @castxml_path
+            "at #{@castxml_path}"
+          else
+            'on your PATH'
+          end
 
-    if `#{binary} --version 2>&1` =~ /CastXML/
-      binary
-    else
-      path_msg =
-        if @castxml_path
-          "at #{@castxml_path}"
-        else
-          "on your PATH"
-        end
+        error_msg = "Unable to find a castxml executable #{path_msg}."
+        error_msg += "\nYou can set an explicit path with the `castxml_path` option to RbGCCXML.parse"
 
-      error_msg = "Unable to find a castxml executable #{path_msg}."
-      error_msg += "\nYou can set an explicit path with the `castxml_path` option to RbGCCXML.parse"
-
-      raise error_msg
+        raise error_msg
+      end
     end
-  end
 
-  def find_clang
-    if @clangpp_path
-      @clangpp_path
-    else
-      `which clang++`.strip
+    def find_clang
+      @clangpp_path || `which clang++`.strip
     end
-  end
 
-  def windows?
-    RUBY_PLATFORM =~ /(mswin|cygwin)/
-  end
-
+    def windows?
+      RUBY_PLATFORM =~ /(mswin|cygwin)/
+    end
 end

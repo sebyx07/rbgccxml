@@ -78,7 +78,7 @@ Once the header files have been parsed, RbGCCXML.parse returns a Namespace node 
 global namespace "::". From here, all the function, class, etc declarations are easily queryable.
 
 ```ruby
-source = RbGCCXML.parse("header.h")  #=> <Namespace ...>
+source = RbGCCXML.parse('header.h')  #=> <Namespace ...>
 ```
 
 Each major C++ node (class, struct, function, method, argument (of functions, methods,
@@ -102,16 +102,16 @@ These queries are also nestable as long as there's more code available to query.
 To find the class "Math" inside the namespace "core::utils", you can do:
 
 ```ruby
-source.namespaces("core").namespaces("utils").classes("Math")
+source.namespaces('core').namespaces('utils').classes('Math')
 ```
 
 or in a short-hand / C++ qualified form:
 
 ```ruby
-source.namespaces("core::utils").classes("Math")
+source.namespaces('core::utils').classes('Math')
 
 # or
-source.classes("core::utils::Math")
+source.classes('core::utils::Math')
 ```
 
 ### Querying with #find
@@ -122,7 +122,7 @@ What if you want to find all methods on a class that return an int and have thre
 any type? This is easy with RbGCCXML:
 
 ```ruby
-source.classes("TheClass").methods.find(:returns => :int, :arguments => [nil, nil, nil])
+source.classes('TheClass').methods.find(returns: :int, arguments: [nil, nil, nil])
 ```
 
 The keys `:returns` and `:arguments` can be used on their own or together as seen above.

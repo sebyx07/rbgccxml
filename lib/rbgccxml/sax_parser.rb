@@ -1,5 +1,6 @@
-module RbGCCXML
+# frozen_string_literal: true
 
+module RbGCCXML
   # Use SAX to parse the generated xml file.
   # This will end up building the full tree of RbGCCXML::Nodes
   # that fit the parsed C++ code.
@@ -19,7 +20,6 @@ module RbGCCXML
 
   # Our SAX Events handler class
   class ParserEventHandler < Nokogiri::XML::SAX::Document
-
     # Ignore types we don't handle yet
     IGNORE_NODES = %w(
       GCC_XML
@@ -40,7 +40,7 @@ module RbGCCXML
       # Need to build a node in memory for those
       # that we don't directly support
       if IGNORE_NODES.include?(name)
-        name = "Node"
+        name = 'Node'
       end
 
       node = RbGCCXML.const_get(name).new(attr_hash)
@@ -63,7 +63,5 @@ module RbGCCXML
     def end_document
       NodeCache.process_tree
     end
-
   end
-
 end

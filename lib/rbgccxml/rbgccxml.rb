@@ -1,8 +1,8 @@
+# frozen_string_literal: true
+
 # RbGCCXML, the library to parse and query C++ header code.
 module RbGCCXML
-
   class << self
-
     # Starting point to any RbGCCXML parsing project.
     #
     # Files can be one of many formats (and should always be full directory paths):
@@ -25,7 +25,7 @@ module RbGCCXML
     #
     # Returns the Namespace Node linked to the global namespace "::".
     def parse(files, options = {})
-      options.merge!(:files => files)
+      options[:files] = files
       @parser = Parser.new options
       @parser.parse
     end
@@ -34,7 +34,7 @@ module RbGCCXML
     #
     # Returns the Namespace Node linked to the global namespace "::".
     def parse_xml(filename)
-      @parser = Parser.new :pregenerated => filename
+      @parser = Parser.new pregenerated: filename
       @parser.parse
     end
   end

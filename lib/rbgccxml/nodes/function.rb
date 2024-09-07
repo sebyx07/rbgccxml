@@ -1,9 +1,9 @@
-module RbGCCXML
+# frozen_string_literal: true
 
+module RbGCCXML
   # Represents a <Function> node, a global or namespaced function
   # or static class functions.
   class Function < Node
-
     # First of all, no more querying once you're this far in
     %w(classes namespaces functions).each do |f|
       define_method(f) do
@@ -18,8 +18,7 @@ module RbGCCXML
 
     # Get the Node representing this Function's return type
     def return_type
-      NodeCache.find(attributes["returns"])
+      NodeCache.find(attributes['returns'])
     end
   end
-
 end

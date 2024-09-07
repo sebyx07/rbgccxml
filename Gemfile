@@ -1,10 +1,12 @@
-source "https://rubygems.org"
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
 
 gemspec
 
-group :development, :test do
-  gem "pry-byebug"
-  gem "rake"
-  gem "rdoc"
-  gem "rspec"
-end
+gem 'rake', '~> 13.2', '>= 13.2.1'
+gem 'rspec', '~> 3.13'
+gem 'rdoc', '~> 6.7'
+
+gem 'rubocop-rails_config', '~> 1.16'
+gem 'pry', '~> 0.14.2'
