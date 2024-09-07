@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
   s.email = 'jasongroelofs@gmail.com'
 
   s.add_dependency 'nokogiri', '>= 1.5.0'
+  s.required_ruby_version = '>= 3.0.0'
 
   s.description = <<-END
 Rbgccxml is a library that parses out GCCXML (http://www.gccxml.org) output
